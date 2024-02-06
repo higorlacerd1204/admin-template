@@ -14,7 +14,7 @@ yarn
 yarn install
 ```
 
-Com as dependências instaladas, bastar rodar o servidor de desenvolvimento:
+Com as dependências instaladas, basta rodar o servidor de desenvolvimento:
 
 ```bash
 npm run dev
