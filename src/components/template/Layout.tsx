@@ -1,3 +1,4 @@
+import useAppData from '../../data/hook/useAppData';
 import Content from './Content';
 import LeftMenu from './LeftMenu';
 import TopBar from './TopBar';
@@ -9,10 +10,12 @@ interface LayoutProps {
 }
 
 export default function Layout(props: LayoutProps) {
+  const { theme } = useAppData();
+
   return (
-    <div className="flex h-screen w-screen">
+    <div className={`${theme} flex h-screen w-screen`}>
       <LeftMenu />
-      <div className="flex flex-col bg-gray-300 w-full p-7 dark:bg-gray-800">
+      <div className="flex flex-col w-full p-7 dark:bg-gray-800">
         <TopBar title={props.title} subtitle={props.subtitle} />
         <Content>{props.children}</Content>
       </div>
