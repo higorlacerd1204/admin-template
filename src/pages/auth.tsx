@@ -63,29 +63,14 @@ export default function Auth() {
           <Image alt="google-icon" height={34} src={GoogleIcon} width={34} />
           Entrar com o Google
         </button>
-
         <div className="mt-8">
-          {isLogin ? (
-            <>
-              Novo por aqui?
-              <p
-                className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-                onClick={() => setMode('register')}
-              >
-                Crie uma Conta Gratuitamente!
-              </p>
-            </>
-          ) : (
-            <>
-              Já faz parte da nossa comunidade?
-              <p
-                className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-                onClick={() => setMode('login')}
-              >
-                Entre com a Sua Conta!
-              </p>
-            </>
-          )}
+          {isLogin ? 'Novo por aqui?' : 'Já faz parte da nossa comunidade?'}
+          <p
+            className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
+            onClick={() => setMode(isLogin ? 'register' : 'login')}
+          >
+            {isLogin ? 'Crie uma Conta Gratuitamente!' : 'Entre com a Sua Conta!'}
+          </p>
         </div>
       </div>
     </div>
