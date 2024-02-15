@@ -3,8 +3,10 @@ import Image from 'next/image';
 import AuthInput from '../components/auth/AuthInput';
 import GoogleIcon from '../../public/assets/icons/google-icon.svg';
 import { WarningIcon } from '../components/icons';
+import useAuth from '../data/hook/useAuth';
 
 export default function Auth() {
+  const { loginGoogle, user } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -58,7 +60,7 @@ export default function Auth() {
         <hr className="my-6 border-gray-300 w-full" />
         <button
           className="flex justify-center items-center gap-2 w-full bg-white hover:bg-red-100 transition ease-in-out duration-100 text-red-500 rounded-lg px-4 py-3 border border-red-500"
-          onClick={onSubmit}
+          onClick={loginGoogle}
         >
           <Image alt="google-icon" height={34} src={GoogleIcon} width={34} />
           Entrar com o Google
