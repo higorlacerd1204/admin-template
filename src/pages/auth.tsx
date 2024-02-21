@@ -4,13 +4,15 @@ import AuthInput from '../components/auth/AuthInput';
 import GoogleIcon from '../../public/assets/icons/google-icon.svg';
 import { WarningIcon } from '../components/icons';
 import useAuth from '../data/hook/useAuth';
+import ReactLoading from 'react-loading';
 
 export default function Auth() {
-  const { loginGoogle, user } = useAuth();
+  const { login, loginGoogle, registerUser } = useAuth();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const isLogin = mode === 'login';
 
   function showError(message: any, time = 5000) {
@@ -18,13 +20,29 @@ export default function Auth() {
     setTimeout(() => setError(null), time);
   }
 
-  function onSubmit() {
-    if (isLogin) {
-      showError('Erro ao logar.');
-    } else {
-      showError('Erro ao realizar cadastro.');
+  async function onSubmit() {
+    try {
+      setLoading(true);
+
+      if (isLogin && login) {
+        await login(email, senha);
+      } else {
+        if (registerUser) {
+          await registerUser(email, senha);
+        }
+      }
+    } catch (error) {
+      if (isLogin) {
+        showError('Erro ao realizar login.');
+      } else {
+        showError('Erro ao cadastrar.');
+      }
+    } finally {
+      setLoading(false);
     }
   }
+
+  console.log(loading);
 
   return (
     <div className="flex h-screen items-center justify-center">
@@ -52,10 +70,13 @@ export default function Auth() {
         <AuthInput label="E-mail" onChangeValue={setEmail} required type="email" value={email} />
         <AuthInput label="Senha" onChangeValue={setSenha} required type="password" value={senha} />
         <button
-          className="w-full bg-indigo-500 hover:bg-indigo-600 transition ease-in-out duration-100 text-white rounded-lg px-4 py-4 mt-6"
+          className="w-full flex justify-center bg-indigo-500 hover:bg-indigo-600 transition ease-in-out duration-100 text-white rounded-lg px-4 py-4 mt-6 disabled:bg-gray-300"
+          disabled={loading}
           onClick={onSubmit}
         >
-          {isLogin ? 'Entrar' : 'Cadastrar'}
+          {loading && <ReactLoading type="spin" color="#6366f1" height={24} width={24} />}
+          {!loading && isLogin && 'Entrar'}
+          {!loading && !isLogin && 'Cadastrar'}
         </button>
         <hr className="my-6 border-gray-300 w-full" />
         <button

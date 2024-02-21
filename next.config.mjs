@@ -10,6 +10,11 @@ const nextConfig = {
         port: '',
         pathname: '/random',
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+      },
     ],
   },
 };

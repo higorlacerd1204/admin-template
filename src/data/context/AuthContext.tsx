@@ -1,17 +1,21 @@
-import User from '@/src/model/User';
+import Cookies from 'js-cookie';
 import firebase from '../../firebase/config';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 interface AuthContextProps {
-  user?: User;
+  user?: any;
+  loading?: boolean;
+  login?: (email: string, senha: string) => Promise<void>;
   loginGoogle?: () => Promise<void>;
+  logout?: () => Promise<void>;
+  registerUser?: (email: string, senha: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({});
 
-async function normalUser(userFirebase: firebase.User): Promise<User> {
-  const token = await userFirebase.getIdToken();
+async function normalUser(userFirebase: firebase.User): Promise<any> {
+  const token = await userFirebase?.getIdToken();
 
   return {
     userId: userFirebase.uid,
@@ -23,25 +27,102 @@ async function normalUser(userFirebase: firebase.User): Promise<User> {
   };
 }
 
+async function getCookie(isAuth: boolean) {
+  if (isAuth) {
+    Cookies.set('admin-template-HLS', isAuth, { expires: 7 });
+  } else {
+    Cookies.remove('admin-template-HLS');
+  }
+}
+
 export function AuthProvider(props: any) {
-  const [user, setUser] = useState<User>(null);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const router = useRouter();
 
-  async function loginGoogle() {
-    const resp = await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  async function configSession(userFirebase: any) {
+    if (userFirebase?.email) {
+      const user = await normalUser(userFirebase);
 
-    if (resp.user?.email) {
-      const user = await normalUser(resp.user);
       setUser(user);
-      router.push('/');
+      getCookie(true);
+      setLoading(false);
+
+      return user.email;
+    } else {
+      setUser(null);
+      getCookie(false);
+      setLoading(false);
+
+      return false;
     }
   }
+
+  async function loginGoogle() {
+    try {
+      setLoading(true);
+      const resp = await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+
+      await configSession(resp.user);
+      router.push('/');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function login(email: string, senha: string) {
+    try {
+      setLoading(true);
+      const resp = await firebase.auth().signInWithEmailAndPassword(email, senha);
+
+      await configSession(resp.user);
+      router.push('/');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function registerUser(email: string, senha: string) {
+    try {
+      setLoading(true);
+      const resp = await firebase.auth().createUserWithEmailAndPassword(email, senha);
+
+      await configSession(resp.user);
+      router.push('/');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function logout() {
+    try {
+      setLoading(true);
+      await firebase.auth().signOut();
+      await configSession(null);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (Cookies.get('admin-template-HLS')) {
+      const cancel = firebase.auth().onIdTokenChanged(configSession);
+
+      return () => cancel();
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        user,
+        loading,
+        login,
         loginGoogle,
+        logout,
+        registerUser,
+        user,
       }}
     >
       {props.children}

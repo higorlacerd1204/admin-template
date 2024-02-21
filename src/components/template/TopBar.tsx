@@ -1,6 +1,7 @@
 import useAppData from '@/src/data/hook/useAppData';
 import ButtonChangeTheme from './ButtonChangeTheme';
 import Title from './Title';
+import Avatar from './Avatar';
 
 interface TopBarProps {
   title: string;
@@ -13,8 +14,9 @@ export default function TopBar(props: TopBarProps) {
   return (
     <div className="flex">
       <Title title={props.title} subtitle={props.subtitle} />
-      <div className="flex flex-grow justify-end">
+      <div className="flex flex-grow justify-end items-center">
         <ButtonChangeTheme changeTheme={changeTheme} theme={theme} />
+        <Avatar className="ml-3" />
       </div>
     </div>
   );
