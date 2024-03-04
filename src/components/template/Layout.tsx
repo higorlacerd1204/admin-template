@@ -17,7 +17,7 @@ export default function Layout(props: LayoutProps) {
     <PrivateRoute>
       <div className={`${theme} flex h-screen w-screen`}>
         <LeftMenu />
-        <div className="flex flex-col w-full p-7 dark:bg-gray-800">
+        <div className="flex flex-col w-full p-4 sm:p-7 dark:bg-gray-800">
           <TopBar title={props.title} subtitle={props.subtitle} />
           <Content>{props.children}</Content>
         </div>

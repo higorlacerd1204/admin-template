@@ -12,7 +12,7 @@ export default function MenuItem(props: MenuItemProps) {
   function renderContent() {
     return (
       <div
-        className={`flex flex-col justify-center items-center w-28 h-20 text-gray-600 dark:text-gray-200 ${props.className}`}
+        className={`flex flex-col justify-center items-center w-24 h-20 text-gray-600 dark:text-gray-200 ${props.className}`}
       >
         {props.icon}
         <span className="text-xs font-light ">{props.text}</span>

@@ -15,8 +15,8 @@ export default function TopBar(props: TopBarProps) {
     <div className="flex">
       <Title title={props.title} subtitle={props.subtitle} />
       <div className="flex flex-grow justify-end items-center">
-        <ButtonChangeTheme changeTheme={changeTheme} theme={theme} />
-        <Avatar className="ml-3" />
+        <ButtonChangeTheme changeTheme={changeTheme} isChangeThemeDesktop theme={theme} />
+        <Avatar className="hidden sm:block ml-3" />
       </div>
     </div>
   );
