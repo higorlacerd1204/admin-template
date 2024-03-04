@@ -27,7 +27,7 @@ async function normalUser(userFirebase: firebase.User): Promise<any> {
   };
 }
 
-async function getCookie(isAuth: boolean) {
+async function getCookie(isAuth: any) {
   if (isAuth) {
     Cookies.set('admin-template-HLS', isAuth, { expires: 7 });
   } else {

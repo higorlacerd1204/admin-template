@@ -20,8 +20,32 @@ export default function Auth() {
     setTimeout(() => setError(null), time);
   }
 
+  function onClickRedirectPage() {
+    setEmail('');
+    setSenha('');
+    setMode(isLogin ? 'register' : 'login');
+  }
+
   async function onSubmit() {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
     try {
+      if (!email && !senha) {
+        return showError('Insira seu E-mail e a Senha.');
+      }
+
+      if (!email) {
+        return showError('Insira seu E-mail.');
+      }
+
+      if (!senha) {
+        return showError('Insira sua Senha.');
+      }
+
+      if (!emailRegex.test(email)) {
+        return showError('E-mail inválido.');
+      }
+
       setLoading(true);
 
       if (isLogin && login) {
@@ -90,7 +114,7 @@ export default function Auth() {
           {isLogin ? 'Novo por aqui?' : 'Já faz parte da nossa comunidade?'}
           <p
             className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-            onClick={() => setMode(isLogin ? 'register' : 'login')}
+            onClick={onClickRedirectPage}
           >
             {isLogin ? 'Crie uma Conta Gratuitamente!' : 'Entre com a Sua Conta!'}
           </p>
